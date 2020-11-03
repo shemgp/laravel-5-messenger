@@ -1,5 +1,5 @@
 <div class="media">
-    <a class="pull-{{ $message->user_id == Auth::id() ? 'left' : 'left' }}" href="#">
+    <a class="pull-{{ $message->user_id == People::getUser(Auth::user()->samaccountname[0])->id ? 'left' : 'left' }}" href="#">
         <img src="//www.gravatar.com/avatar/{{ md5($message->user->email) }}?s=64" alt="{{ $message->user->name }}" class="img-circle">
     </a>
     <div class="media-body">

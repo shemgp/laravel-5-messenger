@@ -102,7 +102,7 @@ class ChatMessengerServiceProvider extends ServiceProvider
         Models::setUserModel($model);
 
         Models::setTables([
-            'users' => (new $model)->getTable(),
+            'users' => $config->get('auth.providers.users.table'),
         ]);
     }
 }

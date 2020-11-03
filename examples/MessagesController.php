@@ -34,10 +34,10 @@ class MessagesController extends Controller
         // $threads = Thread::getAllLatest()->get();
 
         // All threads that user is participating in
-        $threads = Thread::forUser(Auth::id())->latest('updated_at')->get();
+        $threads = Thread::forUser(People::getUser(Auth::user()->samaccountname[0])->id)->latest('updated_at')->get();
 
         // All threads that user is participating in, with new messages
-        // $threads = Thread::forUserWithNewMessages(Auth::id())->latest('updated_at')->get();
+        // $threads = Thread::forUserWithNewMessages(People::getUser(Auth::user()->samaccountname[0])->id)->latest('updated_at')->get();
 
         return view('messenger.index', compact('threads'));
     }
@@ -62,7 +62,7 @@ class MessagesController extends Controller
         // $users = User::whereNotIn('id', $thread->participantsUserIds())->get();
 
         // don't show the current user in list
-        $userId = Auth::id();
+        $userId = People::getUser(Auth::user()->samaccountname[0])->id;
         $users = User::whereNotIn('id', $thread->participantsUserIds($userId))->get();
 
         $thread->markAsRead($userId);
@@ -77,7 +77,7 @@ class MessagesController extends Controller
      */
     public function create()
     {
-        $users = User::where('id', '!=', Auth::id())->get();
+        $users = User::where('id', '!=', People::getUser(Auth::user()->samaccountname[0])->id)->get();
 
         return view('messenger.create', compact('users'));
     }
@@ -98,14 +98,14 @@ class MessagesController extends Controller
         // Message
         $message = Message::create([
             'thread_id' => $thread->id,
-            'user_id' => Auth::id(),
+            'user_id' => People::getUser(Auth::user()->samaccountname[0])->id,
             'body' => $input['message'],
         ]);
 
         // Sender
         Participant::create([
             'thread_id' => $thread->id,
-            'user_id' => Auth::id(),
+            'user_id' => People::getUser(Auth::user()->samaccountname[0])->id,
             'last_read' => new Carbon,
         ]);
 
@@ -156,14 +156,14 @@ class MessagesController extends Controller
         // Message
         $message = Message::create([
             'thread_id' => $thread->id,
-            'user_id' => Auth::id(),
+            'user_id' => People::getUser(Auth::user()->samaccountname[0])->id,
             'body' => $request->get('message'),
         ]);
 
         // Add replier as a participant
         $participant = Participant::firstOrCreate([
             'thread_id' => $thread->id,
-            'user_id' => Auth::id(),
+            'user_id' => People::getUser(Auth::user()->samaccountname[0])->id,
         ]);
         $participant->last_read = new Carbon;
         $participant->save();
@@ -226,10 +226,10 @@ class MessagesController extends Controller
 
                 // previous way of doing it
                 // $pusher_resp = Pusher::trigger(['for_user_' . $recipient], 'new_message', $data);
-                
+
                 // new way of doing it
                 event(new MessageWasComposed($recipient, $data));
-                
+
                 // We're done here - how easy was that, it just works!
             }
         }
@@ -247,7 +247,7 @@ class MessagesController extends Controller
             abort(404);
         }
 
-        $thread->markAsRead(Auth::id());
+        $thread->markAsRead(People::getUser(Auth::user()->samaccountname[0])->id);
     }
 
     /**

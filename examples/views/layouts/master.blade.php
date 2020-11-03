@@ -98,7 +98,7 @@
 
 
 
-                    var channel = pusher.subscribe('for_user_{{ Auth::id() }}');
+                    var channel = pusher.subscribe('for_user_{{ People::getUser(Auth::user()->samaccountname[0])->id }}');
 
                     channel.bind('new_message', function(data) {
                         // console.log(data);

@@ -17,6 +17,6 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('for_user_' . Auth::id(), function ($user, $id) {
+Broadcast::channel('for_user_' . People::getUser(Auth::user()->samaccountname[0])->id, function ($user, $id) {
     return true;
 });

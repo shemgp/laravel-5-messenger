@@ -1,9 +1,9 @@
-<?php $class = $thread->isUnread(Auth::id()) ? 'alert-info' : ''; ?>
+<?php $class = $thread->isUnread(People::getUser(Auth::user()->samaccountname[0])->id) ? 'alert-info' : ''; ?>
 
 <div class="media alert {{ $class }}" id="thread_list_{{ $thread->id }}">
     <h4 class="media-heading">
         <a href="{{ route('messages.show', $thread->id) }}">{{ $thread->subject }}</a>
-        ({{ $thread->userUnreadMessagesCount(Auth::id()) }} unread)</h4>
+        ({{ $thread->userUnreadMessagesCount(People::getUser(Auth::user()->samaccountname[0])->id) }} unread)</h4>
     <p>
         {{ $thread->latestMessage->body }}
     </p>
@@ -11,6 +11,6 @@
         <small><strong>Creator:</strong> {{ $thread->creator()->name }}</small>
     </p>
     <p>
-        <small><strong>Participants:</strong> {{ $thread->participantsString(Auth::id()) }}</small>
+        <small><strong>Participants:</strong> {{ $thread->participantsString(People::getUser(Auth::user()->samaccountname[0])->id) }}</small>
     </p>
 </div>

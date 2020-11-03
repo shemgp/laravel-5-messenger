@@ -487,7 +487,7 @@ class Thread extends Eloquent
     public function star($userId = null)
     {
         if(! $userId)
-            $userId = Auth::id();
+            $userId = People::getUser(Auth::user()->samaccountname[0])->id;
         
         return $this->participants()
             ->where('user_id', $userId)
@@ -505,7 +505,7 @@ class Thread extends Eloquent
     public function unstar($userId = null)
     {
         if(! $userId)
-            $userId = Auth::id();
+            $userId = People::getUser(Auth::user()->samaccountname[0])->id;
         
         return $this->participants()
             ->where('user_id', $userId)
@@ -523,7 +523,7 @@ class Thread extends Eloquent
     public function getIsStarredAttribute($userId = null)
     {
         if(! $userId)
-            $userId = Auth::id();
+            $userId = People::getUser(Auth::user()->samaccountname[0])->id;
         
         return !! $this->participants()
             ->where('user_id', $userId)
